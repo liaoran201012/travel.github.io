@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Global Travel Deals Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background: #f8f9fa; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        header { background: #2c3e50; color: white; padding: 30px 0; text-align: center; margin-bottom: 30px; }
+        header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .content { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; margin: 30px 0 15px 0; font-size: 1.5rem; }
+        h3 { color: #34495e; margin: 20px 0 10px 0; font-size: 1.2rem; }
+        p { margin-bottom: 15px; color: #555; }
+        .contact-form { background: #f8f9fa; padding: 30px; border-radius: 8px; margin: 20px 0; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #2c3e50; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; }
+        .form-group textarea { height: 120px; resize: vertical; }
+        .submit-btn { background: #3498db; color: white; border: none; padding: 12px 30px; border-radius: 5px; font-size: 1rem; cursor: pointer; transition: background 0.3s ease; }
+        .submit-btn:hover { background: #2980b9; }
+        .contact-info { background: #e8f4fd; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .contact-method { margin-bottom: 15px; }
+        .contact-method strong { color: #2c3e50; }
+        .back-link { display: inline-block; background: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin-top: 20px; transition: background 0.3s ease; }
+        .back-link:hover { background: #2980b9; }
+        @media (max-width: 768px) { .container { padding: 15px; } .content { padding: 25px; } header h1 { font-size: 2rem; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Contact Us</h1>
+            <p>Global Travel Deals Platform</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="content">
+            <h2>Get in Touch</h2>
+            <p>We're here to help with your travel questions, feedback, or any other inquiries. Our team is dedicated to providing you with the best possible service.</p>
+
+            <div class="contact-form">
+                <h3>Send us a Message</h3>
+                <form onsubmit="handleContactForm(event)">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Subject *</label>
+                        <select id="subject" name="subject" required>
+                            <option value="">Select a subject</option>
+                            <option value="general">General Inquiry</option>
+                            <option value="support">Technical Support</option>
+                            <option value="feedback">Feedback</option>
+                            <option value="partnership">Partnership</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message *</label>
+                        <textarea id="message" name="message" placeholder="Please describe your inquiry in detail..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
+
+
+
+            <h2>Office Address</h2>
+            <p><strong>Global Travel Deals Platform</strong><br>
+            123 Travel Street<br>
+            Tourism City, TC 12345<br>
+            United States</p>
+
+            <h2>Response Time</h2>
+            <p>We typically respond to inquiries within:</p>
+            <ul>
+                <li><strong>Email inquiries:</strong> 24-48 hours</li>
+                <li><strong>Phone calls:</strong> Immediate during business hours</li>
+                <li><strong>Technical support:</strong> 4-8 hours</li>
+                <li><strong>Partnership inquiries:</strong> 2-3 business days</li>
+            </ul>
+
+            <h2>Before You Contact Us</h2>
+            <p>To help us serve you better, please check our <a href="privacy-policy.html" style="color: #3498db;">Privacy Policy</a> and <a href="terms-of-service.html" style="color: #3498db;">Terms of Service</a> for common questions and answers.</p>
+
+            <a href="V3.(网站测试，功能单一，只分流关键词）.html" class="back-link">← Back to Main Page</a>
+        </div>
+    </div>
+
+    <script>
+        function handleContactForm(event) {
+            event.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(event.target);
+            const name = formData.get('name');
+            const email = formData.get('email');
+            const subject = formData.get('subject');
+            const message = formData.get('message');
+            
+            // Show success message
+            const successMsg = document.createElement('div');
+            successMsg.style.cssText = `
+                background: #d4edda;
+                color: #155724;
+                padding: 15px;
+                border-radius: 5px;
+                margin-top: 20px;
+                text-align: center;
+            `;
+            successMsg.innerHTML = `
+                <strong>Thank you for your message!</strong><br>
+                We've received your inquiry and will respond within 24-48 hours.
+            `;
+            
+            event.target.appendChild(successMsg);
+            event.target.reset();
+            
+            // Remove success message after 5 seconds
+            setTimeout(() => {
+                successMsg.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html> 
