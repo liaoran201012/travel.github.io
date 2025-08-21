@@ -2251,42 +2251,72 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function redirectToService(serviceType) {
     console.log("Redirecting to service:", serviceType);
-    const redirectMap = {
-        'flight': "https://kiwi.tpk.mx/c3p3hsnR",
-        'esim': "https://airalo.tpk.mx/b2ZZYngy", 
-        'attraction': "https://tiqets.tpk.mx/tVeWxjnH"
-    };
     
-    const targetUrl = redirectMap[serviceType];
-    if (targetUrl) {
-        // 显示加载动画
-        showLoadingAnimation();
+    // 获取被点击的按钮
+    const clickedButton = event.target.closest('.enhanced-cta-button') || event.target;
+    
+    // 显示加载动画
+    showLoadingAnimation();
+    
+    // 如果是增强按钮，使用新的状态管理
+    if (clickedButton.classList.contains('enhanced-cta-button')) {
+        clickedButton.classList.add('loading');
+        clickedButton.disabled = true;
         
-        // 获取被点击的按钮
-        const clickedButton = event.target.closest('.enhanced-cta-button') || event.target;
+        // 显示加载文本
+        const buttonText = clickedButton.querySelector('.button-text');
+        const buttonLoading = clickedButton.querySelector('.button-loading');
         
-        // 如果是增强按钮，使用新的状态管理
-        if (clickedButton.classList.contains('enhanced-cta-button')) {
-            clickedButton.classList.add('loading');
-            clickedButton.disabled = true;
-            
-            // 显示加载文本
-            const buttonText = clickedButton.querySelector('.button-text');
-            const buttonLoading = clickedButton.querySelector('.button-loading');
-            
-            if (buttonText && buttonLoading) {
-                buttonText.style.display = 'none';
-                buttonLoading.style.display = 'inline';
-            }
-        } else {
-            // 兼容旧按钮
-            const originalText = clickedButton.innerHTML;
-            clickedButton.innerHTML = '🔄 Redirecting...';
-            clickedButton.style.opacity = '0.7';
-            clickedButton.style.cursor = 'not-allowed';
-            clickedButton.disabled = true;
+        if (buttonText && buttonLoading) {
+            buttonText.style.display = 'none';
+            buttonLoading.style.display = 'inline';
         }
+    } else {
+        // 兼容旧按钮
+        const originalText = clickedButton.innerHTML;
+        clickedButton.innerHTML = '🔄 Redirecting...';
+        clickedButton.style.opacity = '0.7';
+        clickedButton.style.cursor = 'not-allowed';
+        clickedButton.disabled = true;
+    }
+    
+    // 检查是否有URL关键词，优先使用关键词匹配
+    const params = new URLSearchParams(window.location.search);
+    const keyword = (params.get('keyword') || '').toLowerCase();
+    
+    let targetUrl = null;
+    let serviceName = '';
+    
+    // 如果有关键词，尝试匹配
+    if (keyword) {
+        console.log("Checking keyword:", keyword);
+        for (const [serviceKey, serviceConfig] of Object.entries(KEYWORD_REDIRECT_CONFIG)) {
+            for (const keywordItem of serviceConfig.keywords) {
+                if (keyword.includes(keywordItem.toLowerCase())) {
+                    targetUrl = serviceConfig.url;
+                    serviceName = serviceConfig.service;
+                    console.log(`Button click: Keyword "${keywordItem}" matched for ${serviceName}`);
+                    break;
+                }
+            }
+            if (targetUrl) break;
+        }
+    }
+    
+    // 如果没有匹配到关键词，使用默认的服务类型映射
+    if (!targetUrl) {
+        const defaultRedirectMap = {
+            'flight': "https://kiwi.tpk.mx/c3p3hsnR",
+            'esim': "https://airalo.tpk.mx/b2ZZYngy", 
+            'attraction': "https://tiqets.tpk.mx/tVeWxjnH"
+        };
         
+        targetUrl = defaultRedirectMap[serviceType];
+        serviceName = serviceType.charAt(0).toUpperCase() + serviceType.slice(1) + " Service";
+        console.log("No keyword match, using default service:", serviceType);
+    }
+    
+    if (targetUrl) {
         // 立即跳转，不使用延迟
         try {
             const newWindow = window.open(targetUrl, '_blank');
@@ -2326,8 +2356,111 @@ function redirectToService(serviceType) {
     } else {
         console.error("Unknown service type:", serviceType);
         alert("Service not available. Please try again.");
+        
+        // 恢复按钮状态
+        if (clickedButton.classList.contains('enhanced-cta-button')) {
+            clickedButton.classList.remove('loading');
+            clickedButton.disabled = false;
+            
+            if (buttonText && buttonLoading) {
+                buttonText.style.display = 'inline';
+                buttonLoading.style.display = 'none';
+            }
+        } else {
+            clickedButton.innerHTML = originalText;
+            clickedButton.style.cssText = originalStyle;
+            clickedButton.disabled = false;
+        }
     }
 }
+
+// ==================== 关键词映射配置区域 ====================
+// 在这里自定义您的关键词映射规则
+const KEYWORD_REDIRECT_CONFIG = {
+    // 航班服务关键词映射
+    flight: {
+        url: "https://kiwi.tpk.mx/c3p3hsnR",
+        service: "Flight Booking",
+        keywords: [
+            // 航空公司关键词
+            "kiwi", "skyscanner", "kayak", "expedia", "booking", "agoda",
+            "flight", "airline", "airplane", "plane", "ticket", "booking",
+            "cheap", "discount", "budget", "economy", "business", "first",
+            "round trip", "one way", "return", "departure", "arrival",
+            "airport", "terminal", "gate", "boarding", "check in","cheap flights online", "book cheap flights", "affordable flight tickets", "best flight deals", "discount travel booking", "Kiwi.com", "Kiwi flights", "Kiwi cheap flights", "Kiwi travel", "Kiwi.com flights", "kiwi",
+            // 目的地关键词
+            "paris", "london", "new york", "tokyo", "beijing", "shanghai",
+            "bangkok", "singapore", "dubai", "istanbul", "moscow", "sydney",
+            "melbourne", "vancouver", "toronto", "montreal", "mexico city",
+            // 中文关键词
+            "航班", "机票", "航空公司", "飞机票", "廉价机票", "特价机票",
+            "往返机票", "单程机票", "国际航班", "国内航班", "机场", "登机",
+            "巴黎", "伦敦", "纽约", "东京", "北京", "上海", "曼谷", "新加坡"
+        ]
+    },
+    
+    // eSIM服务关键词映射
+    esim: {
+        url: "https://airalo.tpk.mx/b2ZZYngy",
+        service: "eSIM Data",
+        keywords: [
+            // eSIM相关关键词
+            "airalo", "esim", "esim card", "digital sim", "virtual sim",
+            "data", "internet", "mobile data", "roaming", "travel sim",
+            "phone", "mobile", "cellular", "network", "connection",
+            "wifi", "hotspot", "tethering", "4g", "5g", "lte","international travel eSIM", "eSIM for travel", "global eSIM data plans", "buy eSIM online", "travel data plans", "Airalo eSIM", "Airalo travel eSIM", "Airalo international eSIM", "Airalo data plans", "Airalo global eSIM", "airalo",
+            // 地区关键词
+            "europe", "asia", "america", "africa", "australia", "global",
+            "japan", "korea", "china", "thailand", "vietnam", "malaysia",
+            "singapore", "indonesia", "philippines", "india", "sri lanka",
+            "uk", "france", "germany", "italy", "spain", "portugal",
+            "netherlands", "belgium", "switzerland", "austria", "greece",
+            // 中文关键词
+            "电子卡", "虚拟卡", "流量卡", "上网卡", "漫游卡", "旅行卡",
+            "手机卡", "移动数据", "网络", "连接", "热点", "共享网络",
+            "欧洲", "亚洲", "美洲", "非洲", "澳洲", "全球", "日本", "韩国",
+            "中国", "泰国", "越南", "马来西亚", "新加坡", "印度尼西亚"
+        ]
+    },
+    
+    // 景点门票服务关键词映射
+    attraction: {
+        url: "https://tiqets.tpk.mx/tVeWxjnH",
+        service: "Attraction Booking",
+        keywords: [
+            // 景点相关关键词
+            "tiqets", "attraction", "museum", "gallery", "exhibition",
+            "theme park", "amusement park", "zoo", "aquarium", "botanical",
+            "garden", "park", "monument", "statue", "temple", "church",
+            "cathedral", "mosque", "synagogue", "palace", "castle", "fort",
+            "tower", "bridge", "beach", "mountain", "forest", "lake","museum tickets online", "skip the line tickets", "book attractions online", "theme park tickets", "cultural experiences booking", "Tiqets", "Tiqets tickets", "Tiqets museum tickets", "Tiqets attractions", "Tiqets skip the line", "tiquets",
+            // 具体景点关键词
+            "louvre", "eiffel", "versailles", "notre dame", "arc de triomphe",
+            "big ben", "tower bridge", "buckingham", "westminster", "stonehenge",
+            "colosseum", "vatican", "trevi fountain", "pantheon", "pompeii",
+            "sagrada familia", "alhambra", "acropolis", "parthenon", "santorini",
+            "mount fuji", "tokyo tower", "senso ji", "meiji shrine", "kyoto",
+            "great wall", "forbidden city", "summer palace", "terracotta", "panda",
+            "angkor wat", "bangkok palace", "petronas", "marina bay", "gardens",
+            "opera house", "harbour bridge", "uluru", "great barrier reef",
+            "niagara falls", "statue of liberty", "times square", "central park",
+            "golden gate", "hollywood", "disney", "universal", "legoland",
+            // 中文关键词
+            "景点", "博物馆", "美术馆", "展览", "主题公园", "游乐园", "动物园",
+            "水族馆", "植物园", "花园", "公园", "纪念碑", "雕像", "寺庙", "教堂",
+            "大教堂", "清真寺", "犹太教堂", "宫殿", "城堡", "要塞", "塔", "桥",
+            "海滩", "山", "森林", "湖", "卢浮宫", "埃菲尔铁塔", "凡尔赛宫",
+            "巴黎圣母院", "凯旋门", "大本钟", "塔桥", "白金汉宫", "威斯敏斯特",
+            "巨石阵", "斗兽场", "梵蒂冈", "特莱维喷泉", "万神殿", "庞贝古城",
+            "圣家堂", "阿尔罕布拉宫", "卫城", "帕特农神庙", "圣托里尼", "富士山",
+            "东京塔", "浅草寺", "明治神宫", "京都", "长城", "故宫", "颐和园",
+            "兵马俑", "熊猫", "吴哥窟", "曼谷皇宫", "双子塔", "滨海湾花园",
+            "歌剧院", "海港大桥", "乌鲁鲁", "大堡礁", "尼亚加拉瀑布",
+            "自由女神像", "时代广场", "中央公园", "金门大桥", "好莱坞",
+            "迪士尼", "环球影城", "乐高乐园"
+        ]
+    }
+};
 
 // 根据关键词进行跳转的函数（不自动执行）
 function redirectByKeyword() {
@@ -2339,30 +2472,30 @@ function redirectByKeyword() {
     
     console.log("URL keyword:", keyword);
     
-    // 关键词映射规则
-    const redirectMap = [
-        { regex: /\bkiwi\b|\bflight\b|\bticket\b/, url: "https://kiwi.tpk.mx/c3p3hsnR", service: "Flight Booking" },
-        { regex: /\bairalo\b|\besim\b|\bdata\b|\bphone\b/, url: "https://airalo.tpk.mx/b2ZZYngy", service: "eSIM Data" },
-        { regex: /\btiqets\b|\battraction\b|\bmuseum\b/, url: "https://tiqets.tpk.mx/tVeWxjnH", service: "Attraction Booking" }
-    ];
-    
     let targetUrl = null;
     let serviceName = "Best Travel Deals";
     
-    // 匹配关键词
-    for (const rule of redirectMap) {
-        if (rule.regex.test(keyword)) {
-            targetUrl = rule.url;
-            serviceName = rule.service;
-            break;
+    // 遍历所有服务配置，查找匹配的关键词
+    for (const [serviceKey, serviceConfig] of Object.entries(KEYWORD_REDIRECT_CONFIG)) {
+        for (const keywordItem of serviceConfig.keywords) {
+            if (keyword.includes(keywordItem.toLowerCase())) {
+                targetUrl = serviceConfig.url;
+                serviceName = serviceConfig.service;
+                console.log(`Keyword "${keywordItem}" matched for ${serviceName}`);
+                break;
+            }
         }
+        if (targetUrl) break; // 找到匹配项后跳出循环
     }
     
     // 如果没有匹配到关键词，随机选择一个服务
     if (!targetUrl) {
-        const randomIndex = Math.floor(Math.random() * redirectMap.length);
-        targetUrl = redirectMap[randomIndex].url;
-        serviceName = redirectMap[randomIndex].service;
+        const serviceKeys = Object.keys(KEYWORD_REDIRECT_CONFIG);
+        const randomServiceKey = serviceKeys[Math.floor(Math.random() * serviceKeys.length)];
+        const randomService = KEYWORD_REDIRECT_CONFIG[randomServiceKey];
+        targetUrl = randomService.url;
+        serviceName = randomService.service;
+        console.log("No keyword match, randomly selected:", serviceName);
     }
     
     console.log("Selected service:", serviceName, "URL:", targetUrl);
@@ -2508,21 +2641,44 @@ function performRedirect(url) {
     const notification = document.getElementById('redirectNotification');
     if (notification) document.body.removeChild(notification);
     
+    // 检查是否有URL关键词，优先使用关键词匹配
+    const params = new URLSearchParams(window.location.search);
+    const keyword = (params.get('keyword') || '').toLowerCase();
+    
+    let targetUrl = url;
+    let serviceName = "Travel Service";
+    
+    // 如果有关键词，尝试匹配
+    if (keyword) {
+        console.log("Notification redirect: Checking keyword:", keyword);
+        for (const [serviceKey, serviceConfig] of Object.entries(KEYWORD_REDIRECT_CONFIG)) {
+            for (const keywordItem of serviceConfig.keywords) {
+                if (keyword.includes(keywordItem.toLowerCase())) {
+                    targetUrl = serviceConfig.url;
+                    serviceName = serviceConfig.service;
+                    console.log(`Notification redirect: Keyword "${keywordItem}" matched for ${serviceName}`);
+                    break;
+                }
+            }
+            if (targetUrl !== url) break;
+        }
+    }
+    
     // 使用更兼容的跳转方式，避免被谷歌拦截
     try {
         // 方法1：尝试直接跳转
-        const newWindow = window.open(url, '_blank');
+        const newWindow = window.open(targetUrl, '_blank');
         if (newWindow) {
-            console.log("Popup opened successfully");
+            console.log("Notification redirect: Popup opened successfully to", serviceName);
         } else {
             // 方法2：如果弹窗被拦截，使用当前窗口跳转
-            console.log("Popup blocked, redirecting in current window");
-            window.location.href = url;
+            console.log("Notification redirect: Popup blocked, redirecting in current window to", serviceName);
+            window.location.href = targetUrl;
         }
     } catch (error) {
         // 方法3：如果出错，使用当前窗口跳转
-        console.log("Error opening popup, redirecting in current window:", error);
-        window.location.href = url;
+        console.log("Notification redirect: Error opening popup, redirecting in current window to", serviceName, error);
+        window.location.href = targetUrl;
     }
 }
 
@@ -2796,32 +2952,28 @@ function startDynamicContent() {
             
             // 如果有关键词，尝试匹配
             if (keyword) {
-                const redirectMap = [
-                    { regex: /\bkiwi\b|\bflight\b|\bticket\b/, url: "https://kiwi.tpk.mx/c3p3hsnR", service: "Flight Booking" },
-                    { regex: /\bairalo\b|\besim\b|\bdata\b|\bphone\b/, url: "https://airalo.tpk.mx/b2ZZYngy", service: "eSIM Data" },
-                    { regex: /\btiqets\b|\battraction\b|\bmuseum\b/, url: "https://tiqets.tpk.mx/tVeWxjnH", service: "Attraction Booking" }
-                ];
-                
-                for (const rule of redirectMap) {
-                    if (rule.regex.test(keyword)) {
-                        targetUrl = rule.url;
-                        serviceName = rule.service;
-                        break;
+                // 使用新的关键词配置系统
+                for (const [serviceKey, serviceConfig] of Object.entries(KEYWORD_REDIRECT_CONFIG)) {
+                    for (const keywordItem of serviceConfig.keywords) {
+                        if (keyword.includes(keywordItem.toLowerCase())) {
+                            targetUrl = serviceConfig.url;
+                            serviceName = serviceConfig.service;
+                            console.log(`Scroll hint: Keyword "${keywordItem}" matched for ${serviceName}`);
+                            break;
+                        }
                     }
+                    if (targetUrl) break; // 找到匹配项后跳出循环
                 }
             }
             
             // 如果没有匹配到关键词，随机选择一个服务
             if (!targetUrl) {
-                const services = [
-                    { name: 'Flight Booking', url: 'https://kiwi.tpk.mx/c3p3hsnR' },
-                    { name: 'eSIM Data', url: 'https://airalo.tpk.mx/b2ZZYngy' },
-                    { name: 'Attraction Booking', url: 'https://tiqets.tpk.mx/tVeWxjnH' }
-                ];
-                
-                const randomService = services[Math.floor(Math.random() * services.length)];
+                const serviceKeys = Object.keys(KEYWORD_REDIRECT_CONFIG);
+                const randomServiceKey = serviceKeys[Math.floor(Math.random() * serviceKeys.length)];
+                const randomService = KEYWORD_REDIRECT_CONFIG[randomServiceKey];
                 targetUrl = randomService.url;
-                serviceName = randomService.name;
+                serviceName = randomService.service;
+                console.log("Scroll hint: No keyword match, randomly selected:", serviceName);
             }
             
             // 显示加载状态
@@ -3100,60 +3252,7 @@ document.addEventListener('DOMContentLoaded', function() {
     addRippleStyles();
 });
 
-// 根据关键词进行跳转的函数（不自动执行）
-function redirectByKeyword() {
-    console.log("Checking URL for keyword redirect...");
-    
-    // 获取URL参数来确定跳转目标
-    const params = new URLSearchParams(window.location.search);
-    const keyword = (params.get('keyword') || '').toLowerCase();
-    
-    console.log("URL keyword:", keyword);
-    
-    // 关键词映射规则
-    const redirectMap = [
-        { regex: /\bkiwi\b|\bflight\b|\bticket\b/, url: "https://kiwi.tpk.mx/c3p3hsnR", service: "Flight Booking" },
-        { regex: /\bairalo\b|\besim\b|\bdata\b|\bphone\b/, url: "https://airalo.tpk.mx/b2ZZYngy", service: "eSIM Data" },
-        { regex: /\btiqets\b|\battraction\b|\bmuseum\b/, url: "https://tiqets.tpk.mx/tVeWxjnH", service: "Attraction Booking" }
-    ];
-    
-    let targetUrl = null;
-    let serviceName = "Best Travel Deals";
-    
-    // 匹配关键词
-    for (const rule of redirectMap) {
-        if (rule.regex.test(keyword)) {
-            targetUrl = rule.url;
-            serviceName = rule.service;
-            break;
-        }
-    }
-    
-    // 如果没有匹配到关键词，随机选择一个服务
-    if (!targetUrl) {
-        const randomIndex = Math.floor(Math.random() * redirectMap.length);
-        targetUrl = redirectMap[randomIndex].url;
-        serviceName = redirectMap[randomIndex].service;
-    }
-    
-    console.log("Selected service:", serviceName, "URL:", targetUrl);
-    
-    // 立即跳转，不显示通知
-    try {
-        const newWindow = window.open(targetUrl, '_blank');
-        if (newWindow) {
-            console.log("Keyword redirect successful to:", serviceName);
-        } else {
-            // 如果弹窗被拦截，使用当前窗口跳转
-            console.log("Popup blocked, redirecting in current window");
-            window.location.href = targetUrl;
-        }
-    } catch (error) {
-        // 如果出错，使用当前窗口跳转
-        console.log("Error opening popup, redirecting in current window:", error);
-        window.location.href = targetUrl;
-    }
-}
+
 
 function addPageInteractions() {
     const observerOptions = {
