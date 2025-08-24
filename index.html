@@ -1117,6 +1117,14 @@
         50% { transform: scale(1.05); }
     }
     
+    @keyframes borderGlow {
+        0% { background-position: 0% 0%; }
+        25% { background-position: 100% 0%; }
+        50% { background-position: 100% 100%; }
+        75% { background-position: 0% 100%; }
+        100% { background-position: 0% 0%; }
+    }
+    
     @keyframes slideInUp {
         from {
             opacity: 0;
@@ -1382,6 +1390,32 @@
 
 <main class="container">
     <section class="hero-section">
+        <!-- 优惠码促销横幅 -->
+        <div style="background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; padding: 20px; border-radius: 15px; margin-bottom: 30px; box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3); animation: pulse 2s infinite; position: relative; overflow: hidden;">
+            <div style="position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(45deg, #f39c12, #e74c3c, #9b59b6, #3498db); border-radius: 15px; z-index: -1; animation: borderGlow 3s linear infinite;"></div>
+            <div style="text-align: center;">
+                <h3 style="margin: 0 0 10px 0; font-size: 1.4rem; color: white; animation: bounce 1s infinite;">🔥 EXCLUSIVE PROMO CODES - LIMITED TIME! ⏰</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                    <div onclick="copyPromoCode('KIWI2025RADAR')" style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border: 2px solid rgba(255,255,255,0.2);" onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='scale(1.05)';" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='scale(1)';">
+                        <strong>✈️ FLIGHTS: KIWI2025RADAR</strong><br>
+                        <span style="font-size: 0.9rem;">Save $35.10 instantly!</span><br>
+                        <small style="opacity: 0.8;">👆 Click to copy code</small>
+                    </div>
+                    <div onclick="copyPromoCode('SUMMER25')" style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border: 2px solid rgba(255,255,255,0.2);" onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='scale(1.05)';" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='scale(1)';">
+                        <strong>📱 eSIM: SUMMER25</strong><br>
+                        <span style="font-size: 0.9rem;">25% OFF All Destinations!</span><br>
+                        <small style="opacity: 0.8;">👆 Click to copy code</small>
+                    </div>
+                    <div onclick="showStudentDiscount()" style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border: 2px solid rgba(255,255,255,0.2);" onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='scale(1.05)';" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.transform='scale(1)';">
+                        <strong>🎫 ATTRACTIONS: Student Special</strong><br>
+                        <span style="font-size: 0.9rem;">Up to 57% + 12% Extra Off!</span><br>
+                        <small style="opacity: 0.8;">👆 Click for details</small>
+                    </div>
+                </div>
+                <p style="margin: 15px 0 0 0; font-size: 0.9rem; opacity: 0.9;">⏰ Valid until supplies last - Apply codes at checkout</p>
+            </div>
+        </div>
+        
         <h2>Why Choose Our Travel Platform?</h2>
         <p>We've partnered with the world's leading travel providers to bring you exclusive activities and savings that you won't find anywhere else. Enhance your next adventure!</p>
         
@@ -1389,14 +1423,14 @@
         <div style="margin-top: 30px; text-align: center;">
             <h3 style="color: #2c3e50; margin-bottom: 20px;">Choose Your Travel Service</h3>
             <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-                <button onclick="redirectToService('flight')" style="background: linear-gradient(135deg, #3498db, #2980b9); color: white; border: none; padding: 15px 30px; border-radius: 25px; cursor: pointer; font-size: 1rem; font-weight: 600;">
-                    ✈️ Flight Booking
+                <button onclick="redirectToService('flight')" style="background: linear-gradient(135deg, #3498db, #2980b9); color: white; border: none; padding: 15px 30px; border-radius: 25px; cursor: pointer; font-size: 1rem; font-weight: 600; position: relative; overflow: hidden;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(52,152,219,0.4)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+                    ✈️ Save $35 on Flights!
                 </button>
-                <button onclick="redirectToService('esim')" style="background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; border: none; padding: 15px 30px; border-radius: 25px; cursor: pointer; font-size: 1rem; font-weight: 600;">
-                    📱 eSIM Data
+                <button onclick="redirectToService('esim')" style="background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; border: none; padding: 15px 30px; border-radius: 25px; cursor: pointer; font-size: 1rem; font-weight: 600; position: relative; overflow: hidden;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(231,76,60,0.4)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+                    📱 Get 25% OFF eSIM!
                 </button>
-                <button onclick="redirectToService('attraction')" style="background: linear-gradient(135deg, #27ae60, #229954); color: white; border: none; padding: 15px 30px; border-radius: 25px; cursor: pointer; font-size: 1rem; font-weight: 600;">
-                    🎫 Attractions
+                <button onclick="redirectToService('attraction')" style="background: linear-gradient(135deg, #27ae60, #229954); color: white; border: none; padding: 15px 30px; border-radius: 25px; cursor: pointer; font-size: 1rem; font-weight: 600; position: relative; overflow: hidden;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 25px rgba(39,174,96,0.4)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+                    🎫 Skip Lines - 57% OFF!
                 </button>
             </div>
             <p style="margin-top: 15px; font-size: 0.9rem; color: #7f8c8d; font-style: italic;">
@@ -1627,12 +1661,13 @@
                 <li>24/7 customer support</li>
             </ul>
             <div class="price-info">
-                <div class="discount"><span aria-hidden="true">🔥</span> Save up to 40% on flights</div>
+                <div class="discount"><span aria-hidden="true">🔥</span> EXCLUSIVE: Use Code KIWI2025RADAR - Save $35.10!</div>
+                <div class="discount"><span aria-hidden="true">💰</span> Alternative: KIWI15TIPLI - 15% Off Storewide</div>
                 <div>Free cancellation on most bookings</div>
             </div>
             
             <!-- 可展开的详细信息 -->
-            <button class="learn-more-btn" onclick="redirectToService('flight')" aria-label="Learn more about Flight Search Platform">Learn More</button>
+            <button class="learn-more-btn" onclick="redirectToService('flight')" aria-label="Book Now and Save with Flight Search Platform">🚀 Book Now & Save $35!</button>
 
         </div>
 
@@ -1650,12 +1685,13 @@
                 <li>Easy setup process</li>
             </ul>
             <div class="price-info">
-                <div class="discount"><span aria-hidden="true">🔥</span> Up to 60% off roaming costs</div>
-                <div>Data plans from $4.50</div>
+                <div class="discount"><span aria-hidden="true">🔥</span> LIMITED: Code SUMMER25 - 25% Off All eSIMs!</div>
+                <div class="discount"><span aria-hidden="true">💰</span> Alternative: SIMPACKERS15 - 15% Discount</div>
+                <div>Data plans from $4.50 + Up to 60% off roaming costs</div>
             </div>
             
             <!-- 可展开的详细信息 -->
-            <button class="learn-more-btn" onclick="redirectToService('esim')" aria-label="Learn more about Global eSIM Service">Learn More</button>
+            <button class="learn-more-btn" onclick="redirectToService('esim')" aria-label="Get Instant eSIM with 25% Discount">📱 Get 25% OFF Now!</button>
 
         </div>
         
@@ -1674,12 +1710,13 @@
                 <li>Exclusive experiences</li>
             </ul>
             <div class="price-info">
-                <div class="discount"><span aria-hidden="true">🔥</span> Save up to 30% on bookings</div>
+                <div class="discount"><span aria-hidden="true">🔥</span> STUDENT SPECIAL: Up to 57% + 12% Extra Off!</div>
+                <div class="discount"><span aria-hidden="true">💰</span> General: Up to 20% Off + Refer Friend 10% Off</div>
                 <div>Instant mobile delivery</div>
             </div>
             
             <!-- 可展开的详细信息 -->
-            <button class="learn-more-btn" onclick="redirectToService('attraction')" aria-label="Learn more about Attraction Booking">Learn More</button>
+            <button class="learn-more-btn" onclick="redirectToService('attraction')" aria-label="Skip Lines with Student Discount">🎫 Skip Lines - 57% OFF!</button>
 
         </div>
     </section>
@@ -1820,17 +1857,17 @@
         <!-- CTA Button for Reviews -->
         <div style="text-align: center; margin-top: 30px;">
             <button onclick="redirectToService('flight')" style="background: linear-gradient(135deg, #8e44ad, #9b59b6); color: white; border: none; padding: 15px 35px; border-radius: 25px; cursor: pointer; font-size: 1.1rem; font-weight: 600; box-shadow: 0 8px 25px rgba(142, 68, 173, 0.3); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 30px rgba(142, 68, 173, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(142, 68, 173, 0.3)'">
-                📝 Read More Reviews
+                🌟 Book & Get Reviews Like These!
             </button>
         </div>
         
     </section>
 
     <section class="cta-section">
-        <h2>Ready to Start Your Adventure?</h2>
-        <p>Join millions of travelers who trust us for their booking needs. Start planning your next trip today!</p>
-        <div style="font-size: 1.2rem; opacity: 0.9; margin-bottom: 20px;">
-            <span aria-hidden="true">🔥</span> Limited time activities available
+        <h2>🚀 Claim Your Exclusive Travel Deals Now!</h2>
+        <p>Join 5+ million smart travelers saving up to 60% on flights, eSIM, and attractions. These promo codes expire soon!</p>
+        <div style="font-size: 1.2rem; opacity: 0.9; margin-bottom: 20px; color: #e74c3c; font-weight: bold;">
+            <span aria-hidden="true">⏰</span> Limited time offers - Act fast before they're gone!
         </div>
         <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 30px;">
             <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px; text-align: center; cursor: default;">
@@ -2097,7 +2134,7 @@
         <!-- CTA Button for Live Activity -->
         <div style="text-align: center; margin-top: 30px;">
             <button onclick="redirectToService('flight')" style="background: linear-gradient(135deg, #27ae60, #229954); color: white; border: none; padding: 15px 35px; border-radius: 25px; cursor: pointer; font-size: 1.1rem; font-weight: 600; box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 30px rgba(39, 174, 96, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(39, 174, 96, 0.3)'">
-                🚀 Join Live Booking Now
+                ⚡ Grab These Live Deals Now!
             </button>
         </div>
         
@@ -2187,7 +2224,7 @@
         <!-- CTA Button for Price Comparison -->
         <div style="text-align: center; margin-top: 30px;">
             <button onclick="redirectToService('flight')" style="background: linear-gradient(135deg, #3498db, #2980b9); color: white; border: none; padding: 15px 35px; border-radius: 25px; cursor: pointer; font-size: 1.1rem; font-weight: 600; box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 30px rgba(52, 152, 219, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(52, 152, 219, 0.3)'">
-                💰 Compare Prices Now
+                💰 Save More - Compare & Book!
             </button>
         </div>
         
@@ -2736,6 +2773,80 @@ function addPageInteractions() {
             this.style.transform = 'translateY(0) scale(1)';
         });
     });
+}
+
+// 优惠码复制功能
+function copyPromoCode(code) {
+    navigator.clipboard.writeText(code).then(function() {
+        showPromoMessage(`Promo code "${code}" copied to clipboard! 📋✅`);
+    }).catch(function(err) {
+        // 备选复制方法
+        const textArea = document.createElement("textarea");
+        textArea.value = code;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showPromoMessage(`Promo code "${code}" copied to clipboard! 📋✅`);
+    });
+}
+
+// 显示学生折扣详情
+function showStudentDiscount() {
+    const message = `🎓 STUDENT DISCOUNT DETAILS:
+    
+    ✅ Up to 57% OFF regular prices
+    ✅ Additional 12% student discount
+    ✅ Valid with Student Beans verification
+    ✅ Combine with other offers
+    
+    👆 Click any attraction booking section to activate!`;
+    
+    showPromoMessage(message);
+}
+
+// 显示优惠码消息
+function showPromoMessage(message) {
+    // 创建提示框
+    const messageDiv = document.createElement('div');
+    messageDiv.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #27ae60, #2ecc71);
+        color: white;
+        padding: 20px 30px;
+        border-radius: 15px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        z-index: 10000;
+        text-align: center;
+        font-size: 14px;
+        line-height: 1.4;
+        max-width: 400px;
+        white-space: pre-line;
+        animation: slideInUp 0.3s ease-out;
+    `;
+    
+    messageDiv.innerHTML = `
+        <div style="font-weight: bold; margin-bottom: 10px;">🎉 SUCCESS!</div>
+        <div>${message}</div>
+        <div style="margin-top: 15px;">
+            <button onclick="this.parentElement.parentElement.remove()" 
+                    style="background: rgba(255,255,255,0.2); color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold;">
+                Close
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(messageDiv);
+    
+    // 自动移除
+    setTimeout(() => {
+        if (messageDiv.parentNode) {
+            messageDiv.remove();
+        }
+    }, 5000);
 }
 
 function showLoadingAnimation() {
